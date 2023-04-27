@@ -1,32 +1,18 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const PORT = 3000;
-
-mongoose.connect('mongodb://127.0.0.1:27017/turtles_mongoose');
-
-const Turtle = mongoose.model('turtle', {
-  type: String,
-  color: String
-});
-
-Turtle.create({
-  type: 'snapping',
-  color: 'brown and cute'
-}).then(new_turtle => {
-  console.log(new_turtle);
-});
-
-// const turtle = new Turtle({
-//   type: 'box',
-//   color: 'brown and orange'
-// });
-
-// turtle.save().then((new_turtle) => {
-//   console.log(new_turtle);
-// });
+const db = require('./config/connection');
+const api_routes = require('./controllers/api_routes');
 
 const app = express();
 
+app.use(express.json());
 
-app.listen(PORT, () => console.log('Started on port %s', PORT));
+app.use('/api', api_routes);
+
+db.once('open', () => {
+  app.listen(PORT, () => console.log('Server running on port %s', PORT));
+});
+
+
+
 
