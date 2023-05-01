@@ -118,4 +118,7 @@ router.delete('/daturts/:id', async (req, res) => {
   // res.send(deletedTurtle);
 });
 
+// User.deleteMany({}).then(() => console.log('Users deleted'))
+// Turtle.deleteMany({}).then(() => console.log('Turtles deleted'))
+
 module.exports = router;
