@@ -1,5 +1,55 @@
 const router = require('express').Router();
 const Turtle = require('../models/Turtle');
+const User = require('../models/User');
+
+
+// Create a user
+// http://localhost:3000/api/create
+router.post('/auth/create', async (req, res) => {
+  try {
+    const user = await User.create(req.body);
+
+    res.send(user);
+  } catch (err) {
+    res.status(500).send(err.errors.type.properties.message);
+  }
+});
+
+// Create all users
+// http://localhost:3000/api/create
+router.get('/users', async (req, res) => {
+  try {
+    const users = await User.find().populate('turtles');
+
+    res.send(users);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+// Add a turtle to a user
+router.put('/turtles/add/:turtle_id', async (req, res) => {
+  try {
+    const updated_user = await User.findOneAndUpdate(
+      {
+        _id: req.body.user_id
+      },
+      {
+        $push: {
+          turtles: req.params.turtle_id
+        }
+      },
+      {
+        new: true
+      }
+    )
+
+    res.send(updated_user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+});
 
 // Create a turtle
 // http://localhost:3000/api/create
